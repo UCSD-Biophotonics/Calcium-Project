@@ -1,19 +1,14 @@
 myFolder = 'C:\Users\maxw0\Matlab Code\tether images\cut cell 19 good';
-if ~isfolder(myFolder)
-  errorMessage = sprintf('Error: The following folder does not exist:\n%s', myFolder);
-  uiwait(warndlg(errorMessage));
-  return;
-end
 filePattern = fullfile(myFolder, '*.tif');
 tifFiles = dir(filePattern);
-for k = 1:length(tifFiles)
-  baseFileName = tifFiles(k).name;
-  fullFileName = fullfile(myFolder, baseFileName);
-  fprintf(1, 'Now reading %s\n', fullFileName);
-  imageArray = imread(fullFileName);
-  imshow(imageArray);  % Display image.
-  drawnow; % Force display to update immediately.
-end
+k = 1
+baseFileName = tifFiles(k).name;
+fullFileName = fullfile(myFolder, baseFileName);
+fprintf(1, 'Now reading %s\n', fullFileName);
+imageArray = imread(fullFileName);
+imshow(imageArray);  % Display image.
+drawnow; % Force display to update immediately.
+sliderSin;
 
 function sliderSin
 FigH = figure('position',[360 500 400 400]);
