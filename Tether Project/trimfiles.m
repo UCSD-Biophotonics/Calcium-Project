@@ -16,23 +16,23 @@ function trimfiles(imageDir, outputDir, numFiles)
         numFiles = 100;
     end
 
-    files = dir(imageDir + "/" + "*.tif"); % Gets all the files from the directory %
-    len = length(files); % Gets number of files in the directory %
-    skip = max(floor(len/100), 1); % How many files to skip in order to get ~100 or so files %
+    files = dir(imageDir + "/" + "*.tif"); % Gets all the files from the directory 
+    len = length(files); % Gets number of files in the directory 
+    skip = max(floor(len/numFiles), 1); % How many files to skip in order to evenly take sample of numFiles 
 
-    if ~isfolder(outputDir) % Creates output folder if not exists %
+    if ~isfolder(outputDir) % Creates output folder if not exists 
         mkdir(outputDir);
     end
 
-    for i=1:len % Iterates through the file list %
-        if mod(i-1, skip) == 0 % Checks to see if we should add the file %
+    for i=1:len % Iterates through the file list 
+        if mod(i-1, skip) == 0 % Checks to see if we should add the file 
             file = files(i);
             name = file.name;
 
-            copyfile(imageDir + "/" + name, outputDir + "/" + name, 'f'); % Copies file into directory %
+            copyfile(imageDir + "/" + name, outputDir + "/" + name, 'f'); % Copies file into directory 
 
-            numFiles = numFiles - 1;
-            if numFiles <= 0
+            numFiles = numFiles - 1; 
+            if numFiles <= 0 % Checks to see if we have copied enough files
                 break
             end
         end
