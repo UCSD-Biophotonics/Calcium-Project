@@ -4,15 +4,15 @@ function trimfiles(imageDir, outputDir, numFiles)
     % 100 files from C:\Users\USER\documents\images to C:\Users\USER\documents\images\output
     % TRIMFILES('images', 'images\output', 100) - Copies 100 images from dir\images to dir\images\output
     %
-    % TRIMFILES('', '', NaN) - Copies 100 images from dir to dir\output
+    % TRIMFILES() - Copies 100 images from current dir to /output
 
-    if strcmp(imageDir, '')
+    if ~exist('imageDir', 'var')
         imageDir = pwd;
     end
-    if strcmp(outputDir, '')
-        outputDir = imageDir + "/output";
+    if ~exist('outputDir', 'var')
+        outputDir = imageDir + "/filetrim";
     end
-    if isnan(numFiles)
+    if ~exist('numFiles', 'var')
         numFiles = 100;
     end
 
