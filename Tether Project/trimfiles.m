@@ -3,8 +3,12 @@ function trimfiles(imageDir, outputDir, numFiles)
     % TRIMFILES('C:\Users\USER\documents\images', 'C:\Users\USER\documents\images\output', 100) - Copies
     % 100 files from C:\Users\USER\documents\images to C:\Users\USER\documents\images\output
     % TRIMFILES('images', 'images\output', 100) - Copies 100 images from dir\images to dir\images\output
-    %
     % TRIMFILES() - Copies 100 images from current dir to /output
+    %
+    % imageDir (str) - path to the directory of the images (optional, defaults to current dir)
+    % outputDir (str) - path to the directory of the outputted images (optional, defaults to current dir/filetrim)
+    % numFiles (int) - number of files you want (optional, defualts to 100)
+    %
 
     if ~exist('imageDir', 'var')
         imageDir = pwd;
