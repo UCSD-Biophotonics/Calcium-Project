@@ -18,7 +18,7 @@ function trimfiles(imageDir, outputDir, numFiles)
 
     files = dir(imageDir + "/" + "*.tif"); % Gets all the files from the directory 
     len = length(files); % Gets number of files in the directory 
-    skip = max(floor(len/numFiles), 1); % How many files to skip in order to evenly take sample of numFiles 
+    skip = max(floor(len./numFiles), 1); % How many files to skip in order to evenly take sample of numFiles 
 
     if ~isfolder(outputDir) % Creates output folder if not exists 
         mkdir(outputDir);
