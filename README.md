@@ -1,2 +1,2 @@
 "# tether-project" 
-"# Calcium-project"
+"# calcium-project"
