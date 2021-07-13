@@ -224,7 +224,7 @@ files = [{}];
 for i=1:length(listing)
     files{end+1} = listing(i).name;
 end
-files = natsortfiles(files);
+% files = natsortfiles(files);
 set(handles.filelist,'String',files);
 
 % --- Executes during object creation, after setting all properties.
