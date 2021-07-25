@@ -122,7 +122,7 @@ for(k=1:length(file.neuron))
     try
         filename = file.neuron{k};
         raw_data = [file.data; csvread(filename)];
-    catch 
+    catch
         raw_data = [file.data, csvread(filename,1,0)];
     end
 
