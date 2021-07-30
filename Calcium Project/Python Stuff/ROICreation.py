@@ -1,5 +1,6 @@
 import numpy
 from PIL import Image
+import csv
 
 
 class PixelMap:
@@ -13,10 +14,10 @@ class PixelMap:
                 self.pixel_map[-1].append(color // 100 * 100)
 
     def _get_threshold(self):
-        t = sum(map(sum, self.pixel_map)) / (len(self.pixel_map) * len(self.pixel_map[0]))  # Reference matieral uses T so /shrug
+        t = sum(map(sum, self.pixel_map)) / (
+                len(self.pixel_map) * len(self.pixel_map[0]))  # Reference matieral uses T so /shrug
 
         for _ in range(3):
-
             upper_pixels = [j for i in self.pixel_map for j in i if j >= t]  # Extremely slow!
             lower_pixels = [j for i in self.pixel_map for j in i if j < t]
 
@@ -147,13 +148,12 @@ class PixelMap:
             else:
                 break
 
-        print(outline)
-        if len(outline) > 0:
-            Image.fromarray(numpy.array(edges)).show()
+        # if len(outline) > 10:
+        #     Image.fromarray(numpy.array(edges)).show()
 
         return outline
 
-    def _get_rois(self):
+    def _get_outlines(self):
         edges = self._get_edges()
         outlines = []
 
@@ -167,6 +167,15 @@ class PixelMap:
 
         return list(filter(lambda x: len(x) > 10, outlines))
 
+    def generate_rois(self):
+        self._threshold_map(threshold=9148.427826675175)
+        self._smooth_cells()
+
+        outlines = self._get_outlines()
+        for i, j in enumerate(outlines):
+            with open(f"RoiCSV/Cell{i+1}.csv", "w", newline='') as f:
+                writer = csv.writer(f)
+                writer.writerows([l for k, l in enumerate(j) if k % (len(j)//10) == 0])
 
     def save_image(self):  # FOR DEBUGGING
         temp_im = Image.fromarray(numpy.array(self.pixel_map))
@@ -178,9 +187,5 @@ image_path = r"C:\Users\chris\IdeaProjects\tether-project\Calcium Project\ImageA
 im = Image.open(image_path)
 arr = numpy.array(im)
 
-map_ = PixelMap(arr)
-map_._threshold_map(threshold=9148.427826675175)
-map_._smooth_cells()
-print(map_._get_rois())
-
-map_.save_image()
+tif_arr = PixelMap(arr)
+tif_arr.generate_rois()
