@@ -1,6 +1,7 @@
+import csv
+import os
 import numpy
 from PIL import Image
-import csv
 
 
 class PixelMap:
@@ -14,8 +15,7 @@ class PixelMap:
                 self.pixel_map[-1].append(color // 100 * 100)
 
     def _get_threshold(self):
-        t = sum(map(sum, self.pixel_map)) / (
-                len(self.pixel_map) * len(self.pixel_map[0]))  # Reference matieral uses T so /shrug
+        t = sum(map(lambda x: sum(x)/len(x), self.pixel_map)) / len(self.pixel_map)  # Doing it this way to prevent int overflow
 
         for _ in range(3):
             upper_pixels = [j for i in self.pixel_map for j in i if j >= t]  # Extremely slow!
@@ -25,7 +25,6 @@ class PixelMap:
             lower_mean = sum(lower_pixels) / len(lower_pixels)
 
             t = (upper_mean + lower_mean) / 2
-        print(t)
         return t
 
     def _threshold_map(self, threshold=None):  # TODO - get better name
@@ -165,27 +164,34 @@ class PixelMap:
                     for coord in outlines[-1]:
                         edges[coord[0]][coord[1]] = 0
 
-        return list(filter(lambda x: len(x) > 10, outlines))
+        return list(filter(lambda x: len(x) > 100, outlines))
 
-    def generate_rois(self):
-        self._threshold_map(threshold=9148.427826675175)
+    def generate_cells(self):
+        self._threshold_map()
         self._smooth_cells()
 
         outlines = self._get_outlines()
+
+        if not os.path.exists('CellPositions'):
+            os.makedirs('CellPositions')
+
+        for f in os.listdir("CellPositions"):
+            os.remove(os.path.join("CellPositions", f))
+
         for i, j in enumerate(outlines):
-            with open(f"RoiCSV/Cell{i+1}.csv", "w", newline='') as f:
+            with open(f"CellPositions/Cell{i + 1}.csv", "w", newline='') as f:
                 writer = csv.writer(f)
-                writer.writerows([l for k, l in enumerate(j) if k % (len(j)//10) == 0])
+                writer.writerows([l[::-1] for k, l in enumerate(j) if k % (len(j) // 10) == 0])
 
     def save_image(self):  # FOR DEBUGGING
         temp_im = Image.fromarray(numpy.array(self.pixel_map))
         temp_im.save("test.png")
 
 
-image_path = r"C:\Users\chris\IdeaProjects\tether-project\Calcium Project\ImageAnalysis1\GFP\05_09_19_13h20m_55s_ms005__E157.tif"
+image_path = r"C:\Users\chris\IdeaProjects\tether-project\Calcium Project\ImageAnalysis1\GFP\05_09_19_13h15m_39s_ms083__E01.tif"
 
 im = Image.open(image_path)
 arr = numpy.array(im)
 
 tif_arr = PixelMap(arr)
-tif_arr.generate_rois()
+tif_arr.generate_cells()
