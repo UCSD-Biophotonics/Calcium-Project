@@ -1,4 +1,4 @@
-function trimfiles(imageDir, outputDir, numFiles)
+function trimfiles(startVal, endVal, imageDir, outputDir, numFiles)
     % TRIMFILES  Copies a specified amount of tiff images from a specified directory to another
     % TRIMFILES('C:\Users\USER\documents\images', 'C:\Users\USER\documents\images\output', 100) - Copies
     % 100 files from C:\Users\USER\documents\images to C:\Users\USER\documents\images\output
@@ -9,7 +9,12 @@ function trimfiles(imageDir, outputDir, numFiles)
     % outputDir (str) - path to the directory of the outputted images (optional, defaults to current dir/filetrim)
     % numFiles (int) - number of files you want (optional, defualts to 100)
     %
-
+    if ~exist('startVal', 'var')
+        startVal = 0;
+    end
+    if ~exist('endVal', 'var')
+        endVal = numFiles;
+    end
     if ~exist('imageDir', 'var')
         imageDir = pwd;
     end
@@ -22,17 +27,21 @@ function trimfiles(imageDir, outputDir, numFiles)
 
     files = dir(imageDir + "/" + "*.tif"); % Gets all the files from the directory 
     len = length(files); % Gets number of files in the directory 
-    skip = max(floor(len./numFiles), 1); % How many files to skip in order to evenly take sample of numFiles 
+    %skip = max(floor(len./numFiles), 1); % How many files to skip in order to evenly take sample of numFiles 
 
     if ~isfolder(outputDir) % Creates output folder if not exists 
         mkdir(outputDir);
     end
-    i = 1;
-    while i<len % Iterates through the file list 
-        %if mod(i-1, skip) == 0 % Checks to see if we should add the file 
+    
+    i = 0;
+    
+    while (i<len-endVal) % Iterates through the file list 
+        if (i < startVal) || (mod(i, numFiles) ~= 0) % Checks to see if we should add the file 
+           i = i+1;
+           continue 
+        end
         file = files(i);
         name = file.name;
-
         copyfile(imageDir + "/" + name, outputDir + "/" + name, 'f'); % Copies file into directory 
         i = i + numFiles;
             %numFiles = numFiles - 1; 
