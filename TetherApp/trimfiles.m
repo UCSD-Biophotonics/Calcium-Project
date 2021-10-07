@@ -35,7 +35,7 @@ function trimfiles(startVal, endVal, imageDir, outputDir, numFiles)
     
     i = 0;
     
-    for i = startVal:numFiles:len-endVal % Iterates through the file list 
+    for i = startVal+1:numFiles:len-endVal % Iterates through the file list 
         
         file = files(i);
         name = file.name;
